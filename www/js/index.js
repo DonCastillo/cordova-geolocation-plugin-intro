@@ -25,7 +25,40 @@ document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
 
+    var watchID;
+
     // Cordova is now initialized. Have fun!
+    var geoOpts = {
+        enableHighAccuracy: true 
+    }
+
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOpts);
+
+    function geoSuccess(position) {
+        console.log(position)
+        var lat = position.coords.latitude;
+        var long = position.coords.longitude;
+        $('#currentPos').append("<p>" + lat + ", " + long + "</p>");
+    }
+
+    function geoError(error) {
+        console.error(error.message);
+        alert(error.message);
+    }
+
+    
+
+    $('#startWatch').on('click', function() {
+        watchID = navigator.geolocation.watchPosition(geoSuccess, geoError, geoOpts);
+        $(this).hide();
+        $('#stopWatch').show();
+    });
+
+    $('#stopWatch').on('click', function() {
+        navigator.geolocation.clearWatch(watchID)
+        $(this).hide();
+        $('#startWatch').show();
+    });
 
 
 }

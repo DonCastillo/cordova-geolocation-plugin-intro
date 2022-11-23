@@ -16,8 +16,22 @@ var app = new Framework7({
 var mainView = app.views.create('.view-main')
 
 var $$ = Dom7;
+var lat;
+var long;
+var map;
+var marker;
+
+var $$ = Dom7;
 $$(document).on('page:init', '.page[data-name="page2"]', function () {
     // Page 2 fun here
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 18,
+        center: {lat: lat, lng: long}
+    })
+    marker = new google.maps.Marker({
+        position: {lat: lat, lng: long},
+        map: map
+    })
 
 })
 
@@ -36,9 +50,13 @@ function onDeviceReady() {
 
     function geoSuccess(position) {
         console.log(position)
-        var lat = position.coords.latitude;
-        var long = position.coords.longitude;
-        $('#currentPos').append("<p>" + lat + ", " + long + "</p>");
+        lat = position.coords.latitude;
+        long = position.coords.longitude;
+
+        var coords = {lat: lat, lng: long}
+        map.setCenter(coords);
+        marker.setPosition(coords);
+        // $('#currentPos').append("<p>" + lat + ", " + long + "</p>");
     }
 
     function geoError(error) {
